@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SheetFlow — Modern SaaS Workflow Management</title>
+    <meta name="description"
+        content="Manage your business workflow with SheetFlow. A premium, animated, and interactive platform for high-end SaaS productivity.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Outfit:wght@100..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-dark text-light">
+
+            <!-- Navbar -->
+            <nav class="navbar glass">
+                <div class="container container-nav">
+                    <div class="logo">
+                        <i data-lucide="layers" class="logo-icon"></i>
+                        <span>SheetFlow</span>
+                    </div>
+                    <div class="nav-links">
+                        <a href="#features">Features</a>
+                        <a href="#stats">Stats</a>
+                        <a href="signup.html" class="btn btn-primary">Get Started</a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <!-- Floating Shapes Background -->
+                <div class="floating-shapes">
+                    <div class="shape shape-1 blur-lg"></div>
+                    <div class="shape shape-2 blur-md"></div>
+                    <div class="shape shape-3 blur-sm"></div>
+                </div>
+
+                <div class="container hero-container text-center">
+                    <div class="hero-badge reveal-up">Introducing SheetFlow 2.0</div>
+                    <h1 class="hero-title reveal-up">Manage your business with <span
+                            class="gradient-text">SheetFlow</span></h1>
+                    <p class="hero-subtitle reveal-up">A powerful, automated workflow engine designed for modern teams.
+                        Streamline your inventory, invoices, and reports with zero friction.</p>
+                    <div class="hero-actions reveal-up">
+                        <a href="signup.html" class="btn btn-lg btn-primary shadow-pulse">Start Free Trial</a>
+                        <a href="#" class="btn btn-lg btn-outline">Watch Demo</a>
+                    </div>
+
+                    <!-- Floating UI Preview -->
+                    <div class="hero-preview reveal-up parallax" data-speed="0.1">
+                        <div class="preview-card glass">
+                            <div class="preview-header">
+                                <div class="dots"><span></span><span></span><span></span></div>
+                            </div>
+                            <div class="preview-content">
+                                <div class="preview-shimmer"></div>
+                                <img id="dashboard_mockup" src="" alt="Dashboard Preview" class="mockup-img">
+                            </div>
+                        </div>
+                        <!-- Mini Cards -->
+                        <div class="mini-card mini-card-1 glass parallax" data-speed="0.2">
+                            <i data-lucide="trending-up"></i>
+                            <span>+42% Growth</span>
+                        </div>
+                        <div class="mini-card mini-card-2 glass parallax" data-speed="0.15">
+                            <i data-lucide="users"></i>
+                            <span>1.2k New Users</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section id="features" class="features-section">
+                <div class="container">
+                    <div class="section-header text-center reveal-up">
+                        <h2 class="section-title">Built for Performance</h2>
+                        <p class="section-subtitle">A suite of powerful tools to help your team scale faster.</p>
+                    </div>
+
+                    <div class="features-grid">
+                        <div class="feature-card glass reveal-up">
+                            <div class="feature-icon-wrapper">
+                                <i data-lucide="zap"></i>
+                            </div>
+                            <h3>Instant Sync</h3>
+                            <p>Real-time updates across all your sheets and dashboards. Never miss a single data point.
+                            </p>
+                        </div>
+                        <div class="feature-card glass reveal-up">
+                            <div class="feature-icon-wrapper">
+                                <i data-lucide="shield-check"></i>
+                            </div>
+                            <h3>Bank-grade Security</h3>
+                            <p>Enterprise encryption to keep your financial data and internal reports secure at all
+                                times.</p>
+                        </div>
+                        <div class="feature-card glass reveal-up">
+                            <div class="feature-icon-wrapper">
+                                <i data-lucide="bar-chart-3"></i>
+                            </div>
+                            <h3>Advanced Analytics</h3>
+                            <p>Deep dive into your data with custom filters, interactive charts, and actionable
+                                insights.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Interactive Cards / Parallax Section -->
+            <section class="interactive-section">
+                <div class="container">
+                    <div class="interactive-grid">
+                        <div class="interactive-text reveal-left">
+                            <h2 class="section-title">Everything in one place</h2>
+                            <p class="section-subtitle">No more jumping between tabs. SheetFlow brings your inventory,
+                                orders, and customer data into a unified dashboard.</p>
+                            <ul class="feature-list">
+                                <li><i data-lucide="check-circle"></i> Automated Order Tracking</li>
+                                <li><i data-lucide="check-circle"></i> One-click Invoice Generation</li>
+                                <li><i data-lucide="check-circle"></i> Real-time Team Collaboration</li>
+                            </ul>
+                        </div>
+                        <div class="interactive-preview">
+                            <div class="parallax-wrapper">
+                                <div class="card-stack">
+                                    <div class="stack-card stack-card-1 glass parallax" data-speed="0.2">
+                                        <div class="card-header">Orders</div>
+                                        <div class="card-body-skeleton"></div>
+                                    </div>
+                                    <div class="stack-card stack-card-2 glass parallax" data-speed="0.3">
+                                        <div class="card-header">Inventory</div>
+                                        <div class="card-body-skeleton"></div>
+                                    </div>
+                                    <div class="stack-card stack-card-3 glass parallax" data-speed="0.1">
+                                        <div class="card-header">Invoices</div>
+                                        <div class="card-body-skeleton"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stats Section -->
+            <section id="stats" class="stats-section">
+                <div class="container">
+                    <div class="stats-grid">
+                        <div class="stat-item reveal-up">
+                            <div class="stat-number" data-target="99">0</div>
+                            <div class="stat-label">Uptime %</div>
+                        </div>
+                        <div class="stat-item reveal-up">
+                            <div class="stat-number" data-target="250">0</div>
+                            <div class="stat-label">Companies</div>
+                        </div>
+                        <div class="stat-item reveal-up">
+                            <div class="stat-number" data-target="15">0</div>
+                            <div class="stat-label">Countries</div>
+                        </div>
+                        <div class="stat-item reveal-up">
+                            <div class="stat-number" data-target="10">0</div>
+                            <div class="stat-label">Data Regions</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Final CTA Section -->
+            <section id="cta" class="cta-section">
+                <div class="container text-center">
+                    <div class="cta-card glass reveal-scale">
+                        <h2 class="section-title">Ready to optimize your flow?</h2>
+                        <p class="section-subtitle">Join thousands of teams scaling their operations with SheetFlow.</p>
+                        <div class="cta-actions">
+                            <a href="signup.html" class="btn btn-lg btn-primary">Try it for Free</a>
+                            <a href="#" class="btn btn-lg btn-outline">Talk to Sales</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="container">
+                    <div class="footer-content">
+                        <div class="logo">
+                            <i data-lucide="layers" class="logo-icon"></i>
+                            <span>SheetFlow</span>
+                        </div>
+                        <div class="copyright">
+                            &copy; 2026 SheetFlow Inc. All rights reserved.
+                        </div>
+                    </div>
+                </div>
+            </footer>
+
+    <!-- GSAP & Plugins -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <!-- Lenis for Smooth Scroll -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

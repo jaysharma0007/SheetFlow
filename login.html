@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — SheetFlow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+    <style>
+        /* Unique Full-Screen Login Preloader: Neural Scan */
+        .login-preloader {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: -10%;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, var(--primary), var(--secondary), transparent);
+            box-shadow: 0 0 100px var(--primary);
+            opacity: 0;
+            filter: blur(2px);
+        }
+        .preloader-bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0);
+            background-size: 40px 40px;
+            opacity: 0.3;
+        }
+        .reveal-wash {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, var(--primary) 0%, transparent 70%);
+            transform: scale(0);
+            opacity: 0;
+            filter: blur(50px);
+        }
+    </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-dark text-light overflow-hidden">
+    
+    <div class="login-preloader" id="preloader">
+        <div class="preloader-bg-grid"></div>
+        <div class="scan-line" id="scanLine"></div>
+        <div class="reveal-wash" id="wash"></div>
+        <div class="logo" id="preloaderLogo" style="z-index: 10; position: relative;">
+             <i data-lucide="layers" class="logo-icon" style="width: 4rem; height: 4rem;"></i>
+             <span style="font-size: 2.5rem; margin-left: 1rem;">SheetFlow</span>
+        </div>
+    </div>
+
+    <div class="auth-wrapper">
+        <!-- Visual Sidebar (Left Side) -->
+        <div class="auth-side-visual reveal-scale">
+            <div class="visual-content">
+                <a href="index.html" class="logo">
+                    <i data-lucide="layers" class="logo-icon"></i>
+                    <span>SheetFlow</span>
+                </a>
+                <h1 class="visual-title">Scale your workflow <br>with <span class="gradient-text">SheetFlow.</span></h1>
+            </div>
+            
+            <div class="floating-shapes">
+                <div class="shape shape-3 blur-lg"></div>
+                <div class="shape shape-1 blur-md"></div>
+            </div>
+        </div>
+
+        <!-- Form Sidebar (Right Side) -->
+        <div class="auth-side-form">
+            <div class="auth-container-wide reveal-up">
+                <div class="auth-header">
+                    <h2 class="auth-title">Welcome back</h2>
+                    <p class="auth-subtitle">Login to manage your business workflow.</p>
+                </div>
+
+                <div class="auth-form-wrapper">
+                    <form class="auth-form" id="loginForm">
+                        <div class="input-group">
+                            <label for="email">Email Address</label>
+                            <div class="input-wrapper">
+                                <i data-lucide="mail"></i>
+                                <input type="email" id="email" placeholder="name@company.com" required>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <div class="label-flex">
+                                <label for="password">Password</label>
+                                <a href="#" class="forgot-link">Forgot?</a>
+                            </div>
+                            <div class="input-wrapper">
+                                <i data-lucide="lock"></i>
+                                <input type="password" id="password" placeholder="••••••••" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                    </form>
+
+                    <div class="auth-divider">
+                        <span>or continue with</span>
+                    </div>
+
+                    <div class="social-auth">
+                        <button class="btn btn-outline btn-social">
+                             <img src="https://cdn.simpleicons.org/google" alt="Google">
+                             Google
+                        </button>
+                        <button class="btn btn-outline btn-social">
+                             <img src="https://cdn.simpleicons.org/github/white" alt="GitHub">
+                             GitHub
+                        </button>
+                    </div>
+
+                    <p class="auth-footer">
+                        Don't have an account? <a href="signup.html">Create one</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script>
+        lucide.createIcons();
+
+        window.addEventListener('load', () => {
+            const tl = gsap.timeline();
+
+            // 1. Zoom and Intensity build
+            tl.to("#preloaderLogo", { scale: 1.1, duration: 1.5, ease: "sine.inOut" })
+              .to("#scanLine", { opacity: 1, left: "110%", duration: 1.2, ease: "power2.inOut" }, "-=1")
+              .to("#wash", { opacity: 1, scale: 4, duration: 1, ease: "power4.in" }, "-=0.3");
+
+            // 2. Full Page Reveal
+            tl.to("#preloader", {
+                opacity: 0,
+                duration: 0.8,
+                pointerEvents: "none",
+                ease: "power2.out"
+            });
+
+            // 3. Content Reveal
+            tl.to(".auth-side-visual", {
+                opacity: 1,
+                scale: 1,
+                duration: 1.2,
+                ease: "power4.out"
+            }, "-=0.5");
+
+            tl.to(".auth-container-wide", {
+                opacity: 1,
+                y: 0,
+                duration: 1.2,
+                ease: "power4.out"
+            }, "-=1");
+        });
+
+        const shapes = document.querySelectorAll('.shape');
+        let floatOffset = 0;
+        function animateAuthFloating() {
+            floatOffset += 0.02;
+            shapes.forEach((el, index) => {
+                const x = Math.sin(floatOffset + index) * 30;
+                const y = Math.cos(floatOffset * 0.8 + index) * 20;
+                el.style.transform = `translate(${x}px, ${y}px)`;
+            });
+            requestAnimationFrame(animateAuthFloating);
+        }
+        animateAuthFloating();
+    </script>
+</body>
+</html>
