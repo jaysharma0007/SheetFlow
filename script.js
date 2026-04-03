@@ -43,50 +43,58 @@ lenis.on('scroll', (e) => {
     }
 });
 
-// Reveal Animations Logic
+// UI Components Reveal Logic (iOS Unlock Style)
 const revealUpElements = document.querySelectorAll('.reveal-up');
 revealUpElements.forEach((el) => {
+    // Set initial state for snappy entrance
+    gsap.set(el, { opacity: 0, y: 50, scale: 0.9, filter: 'blur(10px)' });
     gsap.to(el, {
         scrollTrigger: {
             trigger: el,
-            start: "top 85%",
+            start: "top 90%",
             toggleActions: "play none none none"
         },
         opacity: 1,
         y: 0,
+        scale: 1,
+        filter: 'blur(0px)',
         duration: 1.2,
-        ease: "power4.out",
+        ease: "back.out(1.4)", // Springy iOS feel
         stagger: 0.1
     });
 });
 
 const revealLeftElements = document.querySelectorAll('.reveal-left');
 revealLeftElements.forEach((el) => {
+    gsap.set(el, { opacity: 0, x: -50, filter: 'blur(10px)' });
     gsap.to(el, {
         scrollTrigger: {
             trigger: el,
-            start: "top 85%",
+            start: "top 90%",
             toggleActions: "play none none none"
         },
         opacity: 1,
         x: 0,
-        duration: 1.2,
+        filter: 'blur(0px)',
+        duration: 1.4,
         ease: "power4.out"
     });
 });
 
 const revealScaleElements = document.querySelectorAll('.reveal-scale');
 revealScaleElements.forEach((el) => {
+    gsap.set(el, { opacity: 0, scale: 0.85, filter: 'blur(5px)' });
     gsap.to(el, {
         scrollTrigger: {
             trigger: el,
-            start: "top 85%",
+            start: "top 90%",
             toggleActions: "play none none none"
         },
         opacity: 1,
         scale: 1,
+        filter: 'blur(0px)',
         duration: 1.5,
-        ease: "power4.out"
+        ease: "back.out(1.2)"
     });
 });
 
@@ -151,6 +159,47 @@ function animateHeroFloating() {
     requestAnimationFrame(animateHeroFloating);
 }
 animateHeroFloating();
+
+// Mobile Menu Toggle Logic
+const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+const mobileMenu = document.querySelector('.mobile-menu');
+const mobileLinks = document.querySelectorAll('.mobile-link');
+
+if (mobileNavToggle) {
+    mobileNavToggle.addEventListener('click', () => {
+        const isOpen = mobileMenu.classList.toggle('active');
+        const icon = mobileNavToggle.querySelector('i');
+        
+        if (isOpen) {
+            icon.setAttribute('data-lucide', 'x');
+            // GSAP Menu Entrance
+            gsap.fromTo(mobileMenu, 
+                { opacity: 0, y: -20, scale: 0.95 },
+                { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.7)" }
+            );
+            // Staggered Link Entrance
+            gsap.fromTo(mobileLinks,
+                { opacity: 0, y: 15 },
+                { opacity: 1, y: 0, duration: 0.4, stagger: 0.1, delay: 0.2, ease: "power2.out" }
+            );
+        } else {
+            icon.setAttribute('data-lucide', 'menu');
+            // GSAP Menu Exit
+            gsap.to(mobileMenu, { opacity: 0, y: -10, duration: 0.3, ease: "power2.in" });
+        }
+        lucide.createIcons();
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+
+    mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+            mobileNavToggle.querySelector('i').setAttribute('data-lucide', 'menu');
+            lucide.createIcons();
+            document.body.style.overflow = '';
+        });
+    });
+}
 
 // Refresh ScrollTrigger on Resize
 window.addEventListener('resize', () => {

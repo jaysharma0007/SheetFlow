@@ -82,7 +82,7 @@
                 </div>
 
                 <div class="auth-form-wrapper">
-                    <form class="auth-form" id="signupForm">
+                    <form class="auth-form" id="signupForm" onsubmit="event.preventDefault(); window.location.href='dashboard.html';">
                         <div class="input-grid">
                             <div class="input-group">
                                 <label for="firstName">First Name</label>
@@ -151,6 +151,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script>
         lucide.createIcons();
+
+        // 1. FORM REDIRECT LOGIC (Testing Mode)
+        const signupForm = document.getElementById('signupForm');
+        if (signupForm) {
+            signupForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                // Button feedback
+                gsap.to(".btn-primary", { scale: 0.95, duration: 0.1, yoyo: true, repeat: 1 });
+                // Robust Redirect
+                setTimeout(() => {
+                    window.location.assign('dashboard.html');
+                }, 300);
+            });
+        }
 
         window.addEventListener('load', () => {
             const tl = gsap.timeline();

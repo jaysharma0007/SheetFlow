@@ -140,6 +140,20 @@
     <script>
         lucide.createIcons();
 
+        // 1. FORM REDIRECT LOGIC (Testing Mode)
+        const loginForm = document.getElementById('loginForm');
+        if (loginForm) {
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                // Button feedback
+                gsap.to(".btn-primary", { scale: 0.95, duration: 0.1, yoyo: true, repeat: 1 });
+                // Robust Redirect
+                setTimeout(() => {
+                    window.location.assign('dashboard.html');
+                }, 300);
+            });
+        }
+
         window.addEventListener('load', () => {
             const tl = gsap.timeline();
 

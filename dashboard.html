@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SheetFlow — Dashboard Launcher</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <!-- Lucide Icons & SortableJS -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+</head>
+<body class="dashboard-body">
+    
+    <!-- Dashboard Launcher Container -->
+    <main class="launcher-container" id="launcherContainer">
+        <!-- Segmented Theme Toggle (OS Style) -->
+        <div class="theme-segmented-control glass">
+            <div class="theme-slider" id="themeSlider"></div>
+            <button class="theme-segment" data-theme="dark-mode" title="Dark Mode">
+                <i data-lucide="moon" class="theme-icon"></i>
+            </button>
+            <button class="theme-segment" data-theme="light-mode" title="Light Mode">
+                <i data-lucide="sun" class="theme-icon"></i>
+            </button>
+            <button class="theme-segment" data-theme="neon-mode" title="Neon Mode">
+                <i data-lucide="zap" class="theme-icon"></i>
+            </button>
+        </div>
+
+        <!-- Branding Header -->
+        <header class="launcher-header">
+            <div class="logo">
+                <i data-lucide="layers" class="logo-icon"></i>
+                <span>SheetFlow</span>
+            </div>
+        </header>
+
+        <!-- App Grid -->
+        <div class="app-grid" id="appGrid">
+            <!-- Dashboard -->
+            <div class="app-item" data-app="dashboard">
+                <div class="app-icon glass">
+                    <i data-lucide="layout-dashboard"></i>
+                </div>
+                <span class="app-label">Dashboard</span>
+            </div>
+
+            <!-- Apps Module -->
+            <div class="app-item" data-app="apps">
+                <div class="app-icon glass">
+                    <i data-lucide="layout-grid"></i>
+                </div>
+                <span class="app-label">Apps</span>
+            </div>
+
+            <!-- Orders -->
+            <div class="app-item" data-app="orders">
+                <div class="app-icon glass">
+                    <i data-lucide="shopping-cart"></i>
+                    <span class="live-badge">12</span>
+                </div>
+                <span class="app-label">Orders</span>
+            </div>
+
+            <!-- Customers -->
+            <div class="app-item" data-app="customers">
+                <div class="app-icon glass">
+                    <i data-lucide="users"></i>
+                </div>
+                <span class="app-label">Customers</span>
+            </div>
+
+            <!-- Inventory -->
+            <div class="app-item" data-app="inventory">
+                <div class="app-icon glass">
+                    <i data-lucide="package"></i>
+                    <span class="live-badge status-alert">Low</span>
+                </div>
+                <span class="app-label">Inventory</span>
+            </div>
+
+            <!-- Invoices -->
+            <div class="app-item" data-app="invoices">
+                <div class="app-icon glass">
+                    <i data-lucide="file-text"></i>
+                </div>
+                <span class="app-label">Invoices</span>
+            </div>
+
+            <!-- Reports -->
+            <div class="app-item" data-app="reports">
+                <div class="app-icon glass">
+                    <i data-lucide="bar-chart-3"></i>
+                </div>
+                <span class="app-label">Reports</span>
+            </div>
+
+            <!-- Settings -->
+            <div class="app-item" data-app="settings">
+                <div class="app-icon glass">
+                    <i data-lucide="settings"></i>
+                </div>
+                <span class="app-label">Settings</span>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="launcher-footer">
+            <p>Made by Jay Suthar</p>
+        </footer>
+    </main>
+
+    <!-- Spotlight Search Modal -->
+    <div class="spotlight-overlay" id="spotlightModal">
+        <div class="spotlight-container glass">
+            <div class="spotlight-header">
+                <i data-lucide="search" class="search-icon"></i>
+                <input type="text" id="spotlightInput" placeholder="Search apps, orders, customers..." autocomplete="off">
+                <div class="search-hint">CMD + K</div>
+            </div>
+            <div class="spotlight-results" id="spotlightResults">
+                <!-- Dynamic Search Results -->
+            </div>
+        </div>
+    </div>
+
+    <!-- App Viewport Overlay (For Opening Animation) -->
+    <div class="app-viewport" id="appViewport">
+        <button class="back-btn" id="backBtn">
+            <i data-lucide="chevron-left"></i>
+            <span>Back to Home</span>
+        </button>
+        <div class="app-content-container" id="appContent">
+            <!-- Module Content Loads Here -->
+        </div>
+    </div>
+
+    <!-- GSAP for High-end Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
