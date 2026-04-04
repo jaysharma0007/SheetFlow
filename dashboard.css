@@ -34,7 +34,7 @@
     transition: all 0.6s ease;
 }
 
-/* App Grid Launcher */
+/* App Grid Launcher (macOS Style Centerpiece Container) */
 .launcher-container {
     width: 100%;
     height: 100vh;
@@ -45,26 +45,128 @@
     padding: 2rem;
     position: relative;
     z-index: 10;
+    overflow: hidden;
+}
+
+/* Central Branding (macOS Centerpiece) */
+.central-branding-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 5;
+    text-align: center;
+}
+
+.launcher-header {
+    opacity: 0.9;
+    scale: 1.5; /* Larger brand impact */
+}
+
+.launcher-header .logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.launcher-header i {
+    width: 6rem;
+    height: 6rem;
+    color: var(--primary);
+    filter: drop-shadow(0 0 20px var(--primary));
+}
+
+.launcher-header span {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+/* macOS Bottom Dock */
+.app-dock-wrapper {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px; /* Restored macOS Pro dock padding */
+    border-radius: 1.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+    z-index: 1000;
 }
 
 .app-grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    grid-gap: 4rem;
-    max-width: 1200px;
-    padding: 2rem;
-    perspective: 1000px;
+    display: flex;
+    flex-direction: row;
+    grid-gap: 1rem;
+    padding: 0;
 }
 
-/* App Item & Icon */
+/* Reduced App Item size for Dock */
 .app-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.25rem;
+    gap: 0.5rem;
     cursor: pointer;
-    transition: transform 0.3s var(--transition-ios);
-    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.app-icon {
+    width: 68px; /* Slightly larger for the bigger 3rem icon */
+    height: 68px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.app-icon i {
+    width: 3rem; /* Maximize Internal Icon Size as requested */
+    height: 3rem;
+    transition: all 0.3s ease;
+}
+
+.app-label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--text-color);
+    letter-spacing: -0.2px;
+}
+
+/* Theme-Reactive Icon Styles */
+.light-mode .app-icon i {
+    color: #1e293b;
+    stroke-width: 2.25;
+}
+
+.neon-mode .app-icon i {
+    color: #f0abfc;
+    filter: drop-shadow(0 0 10px #f0abfc);
+    stroke-width: 1.75;
+}
+
+.dark-mode .app-icon i {
+    color: #ffffff;
+    stroke-width: 2;
+}
+
+/* Dock Magnification Effect */
+.app-item:hover {
+    transform: translateY(-8px) scale(1.2);
+}
+
+.app-item:hover + .app-item,
+.app-item:has( + .app-item:hover) {
+    transform: translateY(-5px) scale(1.15);
 }
 
 .app-icon {
@@ -286,31 +388,57 @@
     color: white;
 }
 
-/* Global Branding & Signature Positions (OS Desktop Layout) */
-.launcher-header {
-    position: absolute;
-    top: 2rem;
-    left: 2rem;
-    z-index: 1100;
-    opacity: 0.95;
-    pointer-events: none;
+/* Top Left Identity Badge (Extreme Visibility Fix) */
+.launcher-footer {
+    position: fixed; /* Fixed to bypass flow issues */
+    top: 2.25rem;
+    left: 2.25rem;
+    z-index: 9999; /* Topmost layer */
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.75rem 1.75rem;
+    border-radius: 9999px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+    opacity: 1 !important; /* Force visibility */
+    transition: all 0.4s var(--transition-ios);
 }
 
-.launcher-footer {
-    position: absolute;
-    bottom: 2rem;
-    left: 2rem;
-    z-index: 1100;
-    font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.4);
+.launcher-footer p {
+    margin: 0;
+    font-size: 1rem; /* Slightly larger */
+    font-weight: 900; /* Extra bold */
+    color: #ffffff; /* Explicit white for Dark/Neon modes */
+    letter-spacing: 0.5px;
     font-family: 'Outfit', sans-serif;
-    letter-spacing: 1px;
+    text-transform: capitalize;
 }
 
 .light-mode .launcher-footer {
-    color: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 0, 0, 0.15);
+}
+
+.light-mode .launcher-footer p {
+    color: #0f172a;
+}
+
+.launcher-footer:hover {
+    transform: scale(1.05) translateX(5px);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+}
+
+.light-mode .launcher-footer {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #1e293b;
 }
 
 .neon-mode .launcher-footer {
-    color: rgba(240, 171, 252, 0.4);
+    border-color: rgba(240, 171, 252, 0.3);
+    box-shadow: 0 0 15px rgba(240, 171, 252, 0.2);
 }

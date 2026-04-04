@@ -111,39 +111,54 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 5. DASHBOARD ENTRY ANIMATION (WOW! Effect)
+    // 5. DASHBOARD ENTRY ANIMATION (macOS WOW! Effect)
     const dashboardEntry = () => {
-        const tl = gsap.timeline({ delay: 0.5 }); // Cinematic 500ms delay
+        const tl = gsap.timeline({ delay: 0.5 }); // Cinematic OS build
 
-        // Initial hidden state to prevent flash
-        gsap.set(launcherContainer, { opacity: 0, scale: 0.95 });
-        gsap.set(".app-item", { opacity: 0, y: 80, scale: 0.8 });
+        const centralBranding = document.querySelector('.central-branding-container');
+        const dockWrapper = document.querySelector('.app-dock-wrapper');
 
-        // Background / Overall Zoom Entrance
-        tl.to(launcherContainer, {
-            duration: 1.5,
-            scale: 1,
+        // Initial hidden state
+        gsap.set(centralBranding, { opacity: 0, scale: 0.8, y: 30 });
+        gsap.set(dockWrapper, { opacity: 0, y: 100 });
+        gsap.set(".app-item", { opacity: 0, scale: 0.8 });
+        gsap.set(".launcher-footer", { opacity: 0, x: -50 });
+
+        // 1. Signature Badge Fade-In (Earliest sequence)
+        tl.to(".launcher-footer", {
+            duration: 1.2,
+            x: 0,
             opacity: 1,
             ease: "expo.out"
         });
 
-        // App Icon fly-in stagger with Spring Physics
-        tl.to(".app-item", {
+        // 2. Central Logo Revealing Focus
+        tl.to(centralBranding, {
+            duration: 1.8,
+            scale: 1,
+            y: 0,
+            opacity: 1,
+            ease: "expo.out"
+        }, "-=0.8");
+
+        // 2. Dock sliding up from bottom
+        tl.to(dockWrapper, {
             duration: 1.2,
             y: 0,
+            opacity: 1,
+            ease: "back.out(1.2)"
+        }, "-=1.2");
+
+        // 3. Dock icons staggered bounce
+        tl.to(".app-item", {
+            duration: 1,
             scale: 1,
             opacity: 1,
-            stagger: 0.08,
-            ease: "back.out(2)", // High-end "Unlock" Bounce
-            delay: -1.2 // Overlap with zoom
+            stagger: 0.05,
+            ease: "back.out(2)",
+            delay: -0.8
         });
 
-        // Soft intensity build for branding
-        tl.from(".launcher-header, .launcher-footer", {
-            opacity: 0,
-            duration: 1,
-            ease: "power2.out"
-        }, "-=0.5");
     };
     dashboardEntry();
 
