@@ -142,10 +142,10 @@
 /* macOS Bottom Dock (Slim Profile) */
 .app-dock-wrapper {
     position: fixed;
-    bottom: 2rem;
+    bottom: 1.5rem;
     left: 50%;
     transform: translateX(-50%);
-    padding: 10px 18px; /* Thinner profile */
+    padding: 8px 16px; /* High-performance thin profile */
     border-radius: 20px;
     background: rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -170,22 +170,33 @@
 }
 
 .app-icon {
-    width: 54px; /* Reduced from 64px */
-    height: 54px;
+    width: 46px; /* Optimized dimensions for touch & mouse */
+    height: 46px;
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: none; /* Strip out flat borders */
+    background: rgba(255, 255, 255, 0.05); /* Fallback */
     position: relative;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    box-shadow: inset 0 -3px 6px rgba(0,0,0,0.25), 0 4px 8px rgba(0,0,0,0.3);
+    overflow: hidden; /* Encapsulate the glass shine */
 }
 
-.app-icon i {
-    width: 24px;
-    height: 24px;
-    stroke-width: 2.5px;
+/* Liquid OS Glass Reflection Bubble */
+.app-icon::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.01) 100%);
+    pointer-events: none;
+}
+
+.app-icon i,
+.app-icon svg {
+    width: 22px; /* Super visible icon */
+    height: 22px;
+    stroke-width: 2px;
     color: white;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
 }
@@ -286,7 +297,7 @@
 /* macOS Divider Style */
 .dock-divider {
     width: 1px;
-    height: 3.5rem;
+    height: 3rem;
     background: rgba(255, 255, 255, 0.15);
     margin: 0 0.5rem;
     border-radius: 1px;
@@ -296,56 +307,17 @@
     background: rgba(0, 0, 0, 0.1);
 }
 
-/* Color Signature - Dark/Neon Modes */
-[data-app="dashboard"] i, [data-app="dashboard"] svg { color: #818cf8; filter: drop-shadow(0 0 10px #818cf855); }
-[data-app="orders"] i, [data-app="orders"] svg { color: #38bdf8; filter: drop-shadow(0 0 10px #38bdf855); }
-[data-app="customers"] i, [data-app="customers"] svg { color: #34d399; filter: drop-shadow(0 0 10px #34d39955); }
-[data-app="inventory"] i, [data-app="inventory"] svg { color: #fbbf24; filter: drop-shadow(0 0 10px #fbbf2455); }
-[data-app="invoices"] i, [data-app="invoices"] svg { color: #f87171; filter: drop-shadow(0 0 10px #f8717155); }
-[data-app="reports"] i, [data-app="reports"] svg { color: #a78bfa; filter: drop-shadow(0 0 10px #a78bfa55); }
-[data-app="apps"] i, [data-app="apps"] svg { color: #fb7185; filter: drop-shadow(0 0 10px #fb718555); }
-[data-app="settings"] i, [data-app="settings"] svg { color: #94a3b8; filter: drop-shadow(0 0 10px #94a3b855); }
+/* Authentic macOS-style App Icons (Fixed Desktop Gradients) */
+[data-app="dashboard"] .app-icon { background: linear-gradient(135deg, #0072ff, #00c6ff); border: none; }
+[data-app="orders"] .app-icon { background: linear-gradient(135deg, #10b981, #059669); border: none; }
+[data-app="customers"] .app-icon { background: linear-gradient(135deg, #f59e0b, #d97706); border: none; }
+[data-app="inventory"] .app-icon { background: linear-gradient(135deg, #8b5cf6, #7c3aed); border: none; }
+[data-app="invoices"] .app-icon { background: linear-gradient(135deg, #ef4444, #dc2626); border: none; }
+[data-app="reports"] .app-icon { background: linear-gradient(135deg, #06b6d4, #0891b2); border: none; }
+[data-app="apps"] .app-icon { background: linear-gradient(135deg, #64748b, #475569); border: none; }
+[data-app="settings"] .app-icon { background: linear-gradient(135deg, #3f3f46, #27272a); border: none; }
 
-.light-mode .app-icon i,
-.light-mode .app-icon svg {
-    filter: none;
-}
-
-.app-label {
-    font-size: 0.7rem;
-    font-weight: 800;
-    color: var(--text-color);
-    letter-spacing: -0.2px;
-}
-
-/* Theme-Reactive Icon Styles */
-.light-mode .app-icon i {
-    color: #1e293b;
-    stroke-width: 2.25;
-}
-
-.neon-mode .app-icon i {
-    color: #f0abfc;
-    filter: drop-shadow(0 0 10px #f0abfc);
-    stroke-width: 1.75;
-}
-
-.dark-mode .app-icon i {
-    color: #ffffff;
-    stroke-width: 2;
-}
-
-/* Dock Magnification (Handled via JS for the Wave Effect) */
-.app-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    transition: transform 0.2s ease-out;
-    will-change: transform;
-}
-
+/* macOS Native Tooltips */
 .app-item:hover .app-label {
     opacity: 1;
     transform: translateY(0);
@@ -353,59 +325,29 @@
 
 .app-label {
     position: absolute;
-    top: -3.8rem; /* Elevated to prevent icon overlap */
-    background: rgba(0,0,0,0.8);
-    padding: 5px 12px;
+    top: -42px;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(10px);
+    padding: 6px 12px;
     border-radius: 8px;
     color: white;
-    font-size: 0.8rem;
-    font-weight: 800;
+    font-size: 0.75rem;
+    font-weight: 600;
     opacity: 0;
     pointer-events: none;
     transform: translateY(10px);
-    transition: all 0.2s ease-out;
+    transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
     white-space: nowrap;
     border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    z-index: 3000;
 }
 
 .light-mode .app-label {
     background: rgba(255, 255, 255, 0.95);
     color: #1e293b;
-    border: 1px solid rgba(0,0,0,0.1);
+    border-color: rgba(0,0,0,0.1);
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-}
-
-.app-icon {
-    width: 110px;
-    height: 110px;
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--icon-radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    transition: all 0.3s var(--transition-ios);
-}
-
-.app-icon i {
-    width: 4rem; /* Increased internal icon size */
-    height: 4rem;
-    color: var(--text-color);
-    transition: color 0.3s ease;
-}
-
-.light-mode .app-icon i { color: #475569; }
-.neon-mode .app-icon i { color: #f0abfc; filter: drop-shadow(0 0 8px #f0abfc); }
-
-.app-label {
-    font-family: 'Outfit', sans-serif;
-    font-size: 1.15rem; /* Larger and impactful */
-    font-weight: 800; /* Extra bold for premium feel */
-    color: var(--text-color);
-    letter-spacing: -0.5px;
 }
 
 /* Live Badge */
@@ -648,3 +590,158 @@
     border-color: rgba(240, 171, 252, 0.3);
     box-shadow: 0 0 15px rgba(240, 171, 252, 0.2);
 }
+
+/* -------------------------------------------
+ * MOBILE OPTIMIZATION ENGINE (Ultra-Responsive)
+ * ------------------------------------------- */
+@media (max-width: 900px) {
+    .supreme-header {
+        padding: 0 1.5rem;
+    }
+    .command-hub { width: 350px; }
+}
+
+/* -------------------------------------------
+ * APP VIEWPORT ENGINE (Hardware Accelerated)
+ * ------------------------------------------- */
+.app-viewport {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--bg-color);
+    z-index: 5000;
+    opacity: 0;
+    pointer-events: none;
+    overflow: hidden; /* Fully controlled via GSAP FLIP */
+}
+
+.app-viewport.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+@media (max-width: 768px) {
+    /* Header Flow Control */
+    .supreme-header {
+        top: 1rem;
+        left: 0rem;
+        right: 0rem;
+        width: 100%;
+        padding: 0 1.25rem;
+        justify-content: space-between;
+    }
+
+    .identity-capsule {
+        padding: 0 1rem;
+    }
+
+    .capsule-sep, .user-badge {
+        display: none; /* Strip out heavy text for sleek mobile layout */
+    }
+
+    .command-hub {
+        position: fixed;
+        display: flex;
+        top: 6rem; /* Lock it right under the primary header void */
+        left: 1rem;
+        right: 1rem;
+        width: auto;
+        height: 55px; /* Extremely prominent hit target */
+        transform: none; /* Ignore main desktop centering */
+    }
+
+    .command-hub kbd {
+        display: none; /* Mobile has no use for desktop keyboard shortcuts */
+    }
+
+    /* Central Branding Alignment */
+    .central-branding-container {
+        top: 35%; 
+    }
+    
+    .logo span {
+        font-size: 3rem;
+    }
+
+    /* iOS Home Screen Grid Logic strictly for phones */
+    .app-dock-wrapper {
+        width: calc(100% - 2rem);
+        max-width: 400px;
+        bottom: 1.5rem;
+        padding: 20px 16px;
+        border-radius: 28px;
+        background: rgba(0,0,0,0.4);
+        border: 1px solid rgba(255,255,255,0.08); /* Frosted finish */
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+
+    .app-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* 4 columns uniform grid */
+        gap: 20px 10px;
+        justify-items: center;
+    }
+
+    .app-item {
+        gap: 4px;
+    }
+
+    .app-icon {
+        width: 52px; /* Bigger touch targets */
+        height: 52px;
+        border-radius: 12px;
+    }
+
+    .app-icon i,
+    .app-icon svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .app-label {
+        display: none; /* Hide tooltip mechanics safely */
+    }
+
+    .dock-divider {
+        display: none; /* Strip out desktop divider on mobile */
+    }
+}
+
+/* -------------------------------------------
+ * NATIVE OS MINIMIZE HANDLE (Top-Left)
+ * ------------------------------------------- */
+.minimize-btn {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 6000;
+    transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.minimize-btn::before {
+    content: '';
+    width: 14px;
+    height: 2px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 2px;
+    transition: background 0.2s;
+}
+
+.minimize-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.1); }
+.minimize-btn:hover::before { background: white; }
+
+.light-mode .minimize-btn { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.1); }
+.light-mode .minimize-btn::before { background: rgba(0,0,0,0.5); }
+.light-mode .minimize-btn:hover { background: rgba(0,0,0,0.12); }

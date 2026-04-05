@@ -168,23 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
             root.classList.remove(...themes);
             if (newTheme !== 'dark-mode') root.classList.add(newTheme);
 
-            // Icon Swapping Logic (Dynamic Morphing + Color Preservation)
-            const iconMap = {
-                'dark-mode': ['layout', 'shopping-bag', 'contact-2', 'container', 'receipt', 'pie-chart', 'shapes', 'command'],
-                'light-mode': ['layout', 'shopping-bag', 'contact-2', 'container', 'receipt', 'pie-chart', 'shapes', 'command'], 
-                'neon-mode': ['cpu', 'zap', 'activity', 'globe', 'fingerprint', 'layers', 'box', 'terminal']
-            };
-
-            const currentSet = iconMap[newTheme] || iconMap['dark-mode'];
-            const dockIcons = document.querySelectorAll('.app-item i, .app-item svg');
-            
-            dockIcons.forEach((icon, i) => {
-                if (currentSet[i]) {
-                    icon.outerHTML = `<i data-lucide="${currentSet[i]}"></i>`;
-                }
-            });
-            lucide.createIcons();
-
             // Settle generic UI back into its bobbing state
             gsap.fromTo(".app-item", 
                 { y: 20, opacity: 0 }, 
@@ -246,43 +229,58 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     dashboardEntry();
 
-    // 6. APP OPENING / CLOSING ENGINE
+    // 6. APP OPENING / CLOSING ENGINE (60 FPS Native Transforms)
     const openApp = (element, type) => {
+        // Measure exactly where the icon is on the screen natively
         const icon = element.querySelector('.app-icon');
         lastClickedIconRect = icon.getBoundingClientRect();
         
-        const clone = icon.cloneNode(true);
-        clone.classList.add('app-clone');
-        document.body.appendChild(clone);
+        // Push content inside the viewport immediately but hide it
+        showAppContent(type);
+        gsap.set(appContent, { opacity: 0 }); 
         
-        gsap.set(clone, {
-            position: 'fixed',
+        // Wrap appViewport physically around the dock icon via inline styles
+        appViewport.style.pointerEvents = 'auto'; // Prevent clicking beneath it while expanding
+        gsap.set(appViewport, {
+            opacity: 1,
             top: lastClickedIconRect.top,
             left: lastClickedIconRect.left,
             width: lastClickedIconRect.width,
             height: lastClickedIconRect.height,
-            borderRadius: '20px',
-            zIndex: 9999,
-            margin: 0
+            borderRadius: '16px',
+            scale: 1,
+            xPercent: 0,
+            yPercent: 0,
+            transform: 'none' // Strip native centering
         });
-
-        const tl = gsap.timeline({ onComplete: () => showAppContent(type) });
-        gsap.to(launcherContainer, { opacity: 0, scale: 0.9, duration: 0.4, ease: "power2.inOut" });
-
-        tl.to(clone, {
-            duration: 0.6,
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
+        
+        // GPU Accelerate the viewport out to fill the screen! Smooth 60 FPS.
+        gsap.to(appViewport, {
+            duration: 0.5,
+            top: '50%',
+            left: '50%',
+            width: '100vw',
+            height: '100vh',
+            xPercent: -50,
+            yPercent: -50,
             borderRadius: 0,
-            ease: "cubic-bezier(0.22, 1, 0.36, 1)"
+            ease: "expo.out",
+            onComplete: () => {
+                appViewport.classList.add('active'); // CSS Takes control
+                gsap.set(appViewport, { clearProps: "all" }); // Destroys glitch-inducing inline rules
+            }
         });
+        
+        // Stagger fade-in the inner content perfectly midway
+        gsap.to(appContent, { opacity: 1, duration: 0.3, delay: 0.2, ease: "power2.out" });
+        
+        // Push the dashboard beautifully into the background Z-layer
+        gsap.to(launcherContainer, { opacity: 0, scale: 0.96, duration: 0.5, ease: "power2.inOut" });
     };
 
     const showAppContent = (type) => {
-        appViewport.classList.add('active');
         appContent.innerHTML = `
+            <div class="minimize-btn" onclick="minimizeApp()" title="Minimize to Dock"></div>
             <div class="module-view reveal-up">
                 <header class="module-header">
                     <h1 class="visual-title"><span class="gradient-text">${type.charAt(0).toUpperCase() + type.slice(1)}</span> Powerhouse</h1>
@@ -295,7 +293,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
         `;
-        document.querySelectorAll('.app-clone').forEach(c => c.remove());
+    };
+
+    window.minimizeApp = () => {
+        if (!lastClickedIconRect) return;
+        
+        // Prepare variables exactly where viewport is right now
+        const rect = appViewport.getBoundingClientRect();
+        appViewport.classList.remove('active'); // Detach CSS to allow GSAP absolute control
+
+        gsap.set(appViewport, {
+            top: rect.top, left: rect.left, width: rect.width, height: rect.height, transform: 'none'
+        });
+
+        // Instantly destroy inner content to prevent layout thrashing while shrinking
+        appContent.innerHTML = '';
+        
+        // Fluidly suck the viewport straight back down into the exact origin dock icon
+        gsap.to(appViewport, {
+            duration: 0.45,
+            top: lastClickedIconRect.top,
+            left: lastClickedIconRect.left,
+            width: lastClickedIconRect.width,
+            height: lastClickedIconRect.height,
+            opacity: 0,
+            borderRadius: '16px',
+            ease: "expo.out",
+            onComplete: () => {
+                gsap.set(appViewport, { clearProps: "all" }); // Total cleanup to stop ghosts
+                appViewport.style.pointerEvents = 'none'; // Lock out clicks
+            }
+        });
+
+        // Pop the background UI back up!
+        gsap.to(launcherContainer, { 
+            opacity: 1, scale: 1, duration: 0.45, delay: 0.05, ease: "back.out(1.2)" 
+        });
     };
 
     appItems.forEach(item => {
@@ -305,7 +338,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-
 
     // Global navigation for search results
     window.navigateTo = (app) => {
