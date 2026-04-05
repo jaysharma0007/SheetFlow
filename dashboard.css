@@ -54,85 +54,261 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    pointer-events: none;
-    z-index: 5;
     text-align: center;
+    z-index: 10;
+    pointer-events: none; /* Don't block clicks to the rest of desktop */
 }
 
-.launcher-header {
-    opacity: 0.9;
-    scale: 1.5; /* Larger brand impact */
-}
-
-.launcher-header .logo {
+/* Fix for potentially redundant logo styles */
+.central-branding-container .logo {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
-.launcher-header i {
+.central-branding-container .logo-icon {
     width: 6rem;
     height: 6rem;
-    color: var(--primary);
-    filter: drop-shadow(0 0 20px var(--primary));
+    color: var(--primary-color);
+    filter: drop-shadow(0 0 30px var(--primary-glow));
+    opacity: 0.9;
 }
 
-.launcher-header span {
-    font-size: 2.5rem;
-    font-weight: 800;
-    letter-spacing: -1px;
+.central-branding-container span {
+    font-size: 5rem;
+    font-weight: 900;
+    letter-spacing: -2px;
+    background: linear-gradient(to bottom, #fff, #94a3b8);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0.95;
 }
 
-/* macOS Bottom Dock */
+/* Final Supreme Header (Absolute OS Layout) */
+.supreme-header {
+    position: fixed;
+    top: 2rem;
+    left: 4rem;
+    right: 4rem;
+    height: 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 2500;
+}
+
+.identity-capsule {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 100%;
+    padding: 0 1.5rem;
+    border-radius: 16px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(40px);
+    transition: all 0.3s ease;
+}
+
+.brand-icon { width: 18px; height: 18px; color: #818cf8; }
+.brand-name { font-weight: 900; color: white; letter-spacing: -0.5px; }
+.capsule-sep { width: 1px; height: 16px; background: rgba(255,255,255,0.2); }
+.user-badge { font-size: 0.75rem; font-weight: 800; color: rgba(255,255,255,0.5); letter-spacing: 1px; }
+
+.command-hub {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 0 1.75rem;
+    border-radius: 16px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(40px);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.command-hub i { color: rgba(255,255,255,0.5); width: 20px; }
+.search-placeholder { color: rgba(255,255,255,0.5); font-size: 0.95rem; font-weight: 500; flex: 1; }
+.command-hub kbd { background: rgba(255,255,255,0.12); padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.1); }
+
+/* macOS Bottom Dock (Slim Profile) */
 .app-dock-wrapper {
     position: fixed;
     bottom: 2rem;
     left: 50%;
     transform: translateX(-50%);
-    padding: 12px 20px; /* Restored macOS Pro dock padding */
-    border-radius: 1.75rem;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 40px 80px rgba(0,0,0,0.6);
-    z-index: 1000;
+    padding: 10px 18px; /* Thinner profile */
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(50px);
+    z-index: 2000;
 }
 
 .app-grid {
     display: flex;
-    flex-direction: row;
-    grid-gap: 1rem;
-    padding: 0;
+    align-items: center;
+    gap: 12px;
 }
 
-/* Reduced App Item size for Dock */
 .app-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
+    gap: 6px;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.3s cubic-bezier(0.17, 0.89, 0.32, 1.28);
+    position: relative;
 }
 
 .app-icon {
-    width: 68px; /* Slightly larger for the bigger 3rem icon */
-    height: 68px;
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 16px;
+    width: 54px; /* Reduced from 64px */
+    height: 54px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
 .app-icon i {
-    width: 3rem; /* Maximize Internal Icon Size as requested */
-    height: 3rem;
+    width: 24px;
+    height: 24px;
+    stroke-width: 2.5px;
+    color: white;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+/* Compact Unified Action Hub (Gravity Sphere) */
+.system-cycle-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(50px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     transition: all 0.3s ease;
+}
+
+.cycle-action-btn {
+    width: 100%;
+    height: 100%;
+    border-radius: 14px;
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.cycle-action-btn i,
+.cycle-action-btn svg {
+    width: 22px;
+    height: 22px;
+    stroke-width: 2.2px;
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.4));
+    transition: color 0.3s ease;
+}
+
+.cycle-action-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Theme Glow Reactivity */
+.neon-mode .system-cycle-wrapper {
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.3);
+}
+
+/* Light Mode Perfection */
+.light-mode .identity-capsule,
+.light-mode .command-hub {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+.light-mode .brand-name { color: #0f172a; }
+.light-mode .user-badge { color: #64748b; }
+.light-mode .search-placeholder { color: #64748b; }
+.light-mode .system-cycle-wrapper { background: rgba(0, 0, 0, 0.06); border-color: rgba(0,0,0,0.1); box-shadow: 0 4px 15px rgba(251, 191, 36, 0.2); }
+.light-mode .cycle-action-btn { color: #1e293b; }
+.light-mode .cycle-action-btn:hover { background: rgba(0,0,0,0.05); }
+.light-mode .cycle-action-btn i, .light-mode .cycle-action-btn svg { color: #1e293b; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.05)); }
+
+/* Light Mode Dock Perfection */
+.light-mode .app-dock-wrapper {
+    background: rgba(255, 255, 255, 0.5); /* Crystalline White Glass */
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+}
+
+.light-mode .app-icon {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Light Mode Dock Icon Visibility */
+.light-mode .app-icon i,
+.light-mode .app-icon svg {
+    color: #1e293b;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.05));
+}
+
+.light-mode [data-app="dashboard"] i, .light-mode [data-app="dashboard"] svg { color: #4f46e5; }
+.light-mode [data-app="orders"] i, .light-mode [data-app="orders"] svg { color: #0ea5e9; }
+.light-mode [data-app="customers"] i, .light-mode [data-app="customers"] svg { color: #10b981; }
+.light-mode [data-app="inventory"] i, .light-mode [data-app="inventory"] svg { color: #f59e0b; }
+.light-mode [data-app="invoices"] i, .light-mode [data-app="invoices"] svg { color: #ef4444; }
+.light-mode [data-app="reports"] i, .light-mode [data-app="reports"] svg { color: #8b5cf6; }
+
+/* Neon Glow Mode Slider */
+.neon-mode .toggle-slider {
+    box-shadow: 0 4px 15px rgba(34, 211, 238, 0.4);
+}
+
+/* macOS Divider Style */
+.dock-divider {
+    width: 1px;
+    height: 3.5rem;
+    background: rgba(255, 255, 255, 0.15);
+    margin: 0 0.5rem;
+    border-radius: 1px;
+}
+
+.light-mode .dock-divider {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* Color Signature - Dark/Neon Modes */
+[data-app="dashboard"] i, [data-app="dashboard"] svg { color: #818cf8; filter: drop-shadow(0 0 10px #818cf855); }
+[data-app="orders"] i, [data-app="orders"] svg { color: #38bdf8; filter: drop-shadow(0 0 10px #38bdf855); }
+[data-app="customers"] i, [data-app="customers"] svg { color: #34d399; filter: drop-shadow(0 0 10px #34d39955); }
+[data-app="inventory"] i, [data-app="inventory"] svg { color: #fbbf24; filter: drop-shadow(0 0 10px #fbbf2455); }
+[data-app="invoices"] i, [data-app="invoices"] svg { color: #f87171; filter: drop-shadow(0 0 10px #f8717155); }
+[data-app="reports"] i, [data-app="reports"] svg { color: #a78bfa; filter: drop-shadow(0 0 10px #a78bfa55); }
+[data-app="apps"] i, [data-app="apps"] svg { color: #fb7185; filter: drop-shadow(0 0 10px #fb718555); }
+[data-app="settings"] i, [data-app="settings"] svg { color: #94a3b8; filter: drop-shadow(0 0 10px #94a3b855); }
+
+.light-mode .app-icon i,
+.light-mode .app-icon svg {
+    filter: none;
 }
 
 .app-label {
@@ -159,14 +335,44 @@
     stroke-width: 2;
 }
 
-/* Dock Magnification Effect */
-.app-item:hover {
-    transform: translateY(-8px) scale(1.2);
+/* Dock Magnification (Handled via JS for the Wave Effect) */
+.app-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.2s ease-out;
+    will-change: transform;
 }
 
-.app-item:hover + .app-item,
-.app-item:has( + .app-item:hover) {
-    transform: translateY(-5px) scale(1.15);
+.app-item:hover .app-label {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.app-label {
+    position: absolute;
+    top: -3.8rem; /* Elevated to prevent icon overlap */
+    background: rgba(0,0,0,0.8);
+    padding: 5px 12px;
+    border-radius: 8px;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 800;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: all 0.2s ease-out;
+    white-space: nowrap;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.light-mode .app-label {
+    background: rgba(255, 255, 255, 0.95);
+    color: #1e293b;
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
 .app-icon {

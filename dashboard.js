@@ -16,20 +16,71 @@ document.addEventListener('DOMContentLoaded', () => {
     let lastClickedIconRect = null;
 
     // 2. DRAG & DROP LAUNCHER GRID (Supreme SortableJS)
+    let isDragging = false;
     new Sortable(appGrid, {
-        animation: 300,
+        animation: 250,
         ghostClass: 'sortable-ghost',
         dragClass: 'sortable-drag',
         forceFallback: true, // More reliable across browsers
         swapThreshold: 0.65,
+        filter: '.dock-divider', // Skip the divider
         onStart: (e) => {
+            isDragging = true;
             gsap.to(e.item, { scale: 1.1, duration: 0.2 });
         },
         onEnd: (e) => {
+            isDragging = false;
             gsap.to(e.item, { scale: 1, duration: 0.2 });
             lucide.createIcons();
         }
     });
+
+    // 2.1 DOCK MAGNIFICATION (macOS Wave Effect)
+    const dockMagnification = () => {
+        const dockWrapper = document.querySelector('.app-dock-wrapper');
+        const maxScale = 1.5;
+        const radius = 180;
+
+        dockWrapper.addEventListener('mousemove', (e) => {
+            if (isDragging) return;
+
+            const mouseX = e.clientX;
+            const items = document.querySelectorAll('.app-item');
+
+            items.forEach(item => {
+                const rect = item.getBoundingClientRect();
+                const iconCenter = rect.left + rect.width / 2;
+                const distance = Math.abs(mouseX - iconCenter);
+
+                if (distance < radius) {
+                    const ratio = 1 - (distance / radius);
+                    
+                    // Snappy macOS "Pop" Interaction
+                    const tiltX = (e.clientY - (rect.top + rect.height/2)) * 0.1;
+                    const tiltY = (e.clientX - (rect.left + rect.width/2)) * -0.1;
+
+                    gsap.to(item, {
+                        scale: 1 + (1.8 - 1) * Math.pow(ratio, 2), // Higher pop scale
+                        y: -45 * Math.pow(ratio, 2), // More dramatic lift
+                        rotationX: tiltX * ratio,
+                        rotationY: tiltY * ratio,
+                        duration: 0.15, // Ultra-snappy
+                        ease: "elastic.out(1, 0.75)", // Bouncy "Pop" feel
+                        overwrite: 'auto'
+                    });
+                } else {
+                    gsap.to(item, { scale: 1, y: 0, rotationX: 0, rotationY: 0, duration: 0.3, ease: "power2.out" });
+                }
+            });
+        });
+
+        dockWrapper.addEventListener('mouseleave', () => {
+            document.querySelectorAll('.app-item').forEach(item => {
+                gsap.to(item, { scale: 1, y: 0, duration: 0.4, ease: "power2.out" });
+            });
+        });
+    };
+    dockMagnification();
 
     // 3. SPOTLIGHT SEARCH (Cmd + K or /)
     const toggleSpotlight = (forceClose = false) => {
@@ -58,10 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Escape') toggleSpotlight(true);
     });
 
-    spotlightModal.addEventListener('click', (e) => {
-        if (e.target === spotlightModal) toggleSpotlight(true);
-    });
-
     // Mock Search Results
     spotlightInput.addEventListener('input', (e) => {
         const val = e.target.value.toLowerCase();
@@ -82,34 +129,71 @@ document.addEventListener('DOMContentLoaded', () => {
         lucide.createIcons();
     });
 
-    // 4. THEME ENGINE (Segmented Version)
-    const themeSegments = document.querySelectorAll('.theme-segment');
-    const themeSlider = document.getElementById('themeSlider');
-    const themes = ['dark-mode', 'light-mode', 'neon-mode'];
+    // Supreme Header Command Hub Trigger
+    const mainSearchTrigger = document.getElementById('mainSearchTrigger');
+    if (mainSearchTrigger) {
+        mainSearchTrigger.addEventListener('click', () => toggleSpotlight());
+    }
 
-    themeSegments.forEach((segment, index) => {
-        segment.addEventListener('click', () => {
-            const newTheme = segment.getAttribute('data-theme');
-            
-            // Move Slider: 3.5rem (width) + 0.5rem (gap) = 4rem offset per item
-            const moveAmount = index * 4; 
-            gsap.to(themeSlider, { 
-                x: `${moveAmount}rem`, 
-                duration: 0.5, 
-                ease: "back.out(1.5)" 
+    // 4. THEME ENGINE (Compact Sphere Cycle)
+    const themeCycleBtn = document.getElementById('themeCycleBtn');
+    const themes = ['dark-mode', 'light-mode', 'neon-mode'];
+    const themeIcons = ['moon', 'sun', 'zap'];
+    let currentThemeIndex = 0;
+
+    if (themeCycleBtn) {
+        themeCycleBtn.addEventListener('click', () => {
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            const newTheme = themes[currentThemeIndex];
+            const newIcon = themeIcons[currentThemeIndex];
+
+            // Rotary Spin physics
+            const currentSvg = themeCycleBtn.querySelector('svg') || themeCycleBtn.querySelector('i');
+            gsap.to(currentSvg, {
+                rotation: 180,
+                scale: 0.5,
+                opacity: 0,
+                duration: 0.25,
+                onComplete: () => {
+                    themeCycleBtn.innerHTML = `<i data-lucide="${newIcon}"></i>`;
+                    lucide.createIcons();
+                    const nextSvg = themeCycleBtn.querySelector('svg');
+                    gsap.fromTo(nextSvg, 
+                        { rotation: -180, scale: 0.5, opacity: 0 }, 
+                        { rotation: 0, scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.5)" }
+                    );
+                }
             });
 
-            // Update Body Class
             root.classList.remove(...themes);
-            if (newTheme !== 'dark-mode') {
-                root.classList.add(newTheme);
-            }
+            if (newTheme !== 'dark-mode') root.classList.add(newTheme);
 
-            // High-fidelity feedback for contrast sync
-            gsap.fromTo(".app-label, .launcher-header span, .logo span, .theme-segment", 
-                { opacity: 0.7 }, { opacity: 1, duration: 0.4 });
+            // Icon Swapping Logic (Dynamic Morphing + Color Preservation)
+            const iconMap = {
+                'dark-mode': ['layout', 'shopping-bag', 'contact-2', 'container', 'receipt', 'pie-chart', 'shapes', 'command'],
+                'light-mode': ['layout', 'shopping-bag', 'contact-2', 'container', 'receipt', 'pie-chart', 'shapes', 'command'], 
+                'neon-mode': ['cpu', 'zap', 'activity', 'globe', 'fingerprint', 'layers', 'box', 'terminal']
+            };
+
+            const currentSet = iconMap[newTheme] || iconMap['dark-mode'];
+            const dockIcons = document.querySelectorAll('.app-item i, .app-item svg');
+            
+            dockIcons.forEach((icon, i) => {
+                if (currentSet[i]) {
+                    icon.outerHTML = `<i data-lucide="${currentSet[i]}"></i>`;
+                }
+            });
+            lucide.createIcons();
+
+            // Settle generic UI back into its bobbing state
+            gsap.fromTo(".app-item", 
+                { y: 20, opacity: 0 }, 
+                { y: 0, opacity: 1, duration: 0.6, stagger: 0.05, ease: "back.out(1.5)" });
+
+            gsap.fromTo(".logo span, .app-icon svg", 
+                { opacity: 0.7, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.4 });
         });
-    });
+    }
 
     // 5. DASHBOARD ENTRY ANIMATION (macOS WOW! Effect)
     const dashboardEntry = () => {
@@ -122,12 +206,12 @@ document.addEventListener('DOMContentLoaded', () => {
         gsap.set(centralBranding, { opacity: 0, scale: 0.8, y: 30 });
         gsap.set(dockWrapper, { opacity: 0, y: 100 });
         gsap.set(".app-item", { opacity: 0, scale: 0.8 });
-        gsap.set(".launcher-footer", { opacity: 0, x: -50 });
 
-        // 1. Signature Badge Fade-In (Earliest sequence)
-        tl.to(".launcher-footer", {
-            duration: 1.2,
-            x: 0,
+        // 1. Central Logo Revealing Focus
+        tl.to(centralBranding, {
+            duration: 1.8,
+            scale: 1,
+            y: 0,
             opacity: 1,
             ease: "expo.out"
         });
@@ -222,25 +306,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    backBtn.addEventListener('click', () => {
-        if (!lastClickedIconRect) return;
-        gsap.to(appViewport, {
-            duration: 0.6,
-            top: lastClickedIconRect.top + (lastClickedIconRect.height / 2),
-            left: lastClickedIconRect.left + (lastClickedIconRect.width / 2),
-            width: lastClickedIconRect.width,
-            height: lastClickedIconRect.height,
-            scale: 0.5,
-            opacity: 0,
-            borderRadius: '20px',
-            ease: "cubic-bezier(0.22, 1, 0.36, 1)",
-            onComplete: () => {
-                appViewport.classList.remove('active');
-                gsap.set(appViewport, { top: '50%', left: '50%', width: '100%', height: '100vh', borderRadius: 0, scale: 1 });
-                gsap.to(launcherContainer, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.2)" });
-            }
-        });
-    });
 
     // Global navigation for search results
     window.navigateTo = (app) => {
